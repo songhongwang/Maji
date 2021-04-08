@@ -21,11 +21,8 @@ class SubjectAdapter(private val dataList: List<Subject?>?) :RecyclerView.Adapte
         }
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return object : RecyclerView.ViewHolder(ItemSubjectBinding.inflate(LayoutInflater.from(parent.context), parent, false).root) {}
-
     }
 
     override fun getItemCount(): Int {
