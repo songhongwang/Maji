@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
     private lateinit var subjectViewModel: SubjectViewModel
     private val mScrollThreshold = 20
-
     private lateinit var viewBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,11 +58,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeData() {
         subjectViewModel = ViewModelProvider(this).get(SubjectViewModel::class.java)
-
         subjectViewModel.observeDataMain(this, observer = Observer {
             Log.d(TAG, "history size is = ${it?.size}")
             it?.let {
-                SubjectAdapter.bindAdapter(viewBinding.rvSubject, it)
+                if(viewBinding.rvSubject.adapter == null) {
+                    SubjectAdapter.bindAdapter(viewBinding.rvSubject, it.toMutableList())
+                }
+                viewBinding.rvSubject.adapter?.notifyDataSetChanged()
             }
 
         })

@@ -10,14 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maji.mvvm.databinding.ItemSubjectBinding
 import com.maji.mvvm.model.Subject
 
-class SubjectAdapter(private val dataList: List<Subject?>?) :RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class SubjectAdapter(var dataList: MutableList<Subject?>?) :RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     companion object{
         @BindingAdapter("bindData")
-        fun bindAdapter(recyclerView: RecyclerView, subjectList: List<Subject?>?) {
-            recyclerView.adapter = SubjectAdapter(subjectList)
+        fun bindAdapter(recyclerView: RecyclerView, subjectList: MutableList<Subject?>?) : SubjectAdapter {
+            val adapter = SubjectAdapter(subjectList)
+            recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
             recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
+            return adapter
         }
     }
 

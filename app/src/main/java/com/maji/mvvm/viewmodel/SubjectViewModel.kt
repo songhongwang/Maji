@@ -18,7 +18,7 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
     private val TAG = SubjectViewModel::class.java.simpleName
     private val timer = Timer("schedule", true);
     private var db:SubjectDataBase? = null
-    private val period = 5 * 1000L
+    private val period = 5 * 2 * 1000L
     private var sdf :SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:MM:SS", Locale.CHINESE)
 
     init {
@@ -26,27 +26,11 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     private fun getData(owner: LifecycleOwner, observer: Observer<Subject?>) {
-        ApiClient.service.getList().observe(owner, observer)
+        ApiClient.service.getList().observeForever(observer)
     }
 
-    fun observeDataHistory(owner: LifecycleOwner, observer: Observer<List<Subject?>?>) {
-        querySubjectHistory(owner, observer)
-
-        timer.schedule(object : TimerTask(){
-            override fun run() {
-                Log.d(TAG, "周期5s")
-
-                GlobalScope.launch(Dispatchers.Main) {
-                    getData(owner, observer = Observer {
-                        it?.let { it1 -> insertDB(it1) }
-
-                        // 是否直接刷新数据
-                         querySubjectHistory(owner, observer)
-                    })
-                }
-
-            }
-        }, period, period)
+    fun observeDataHistory(owner: LifecycleOwner, o: Observer<List<Subject?>?>) {
+        querySubjectHistory(owner, o)
     }
 
     fun observeDataMain(owner: LifecycleOwner, observer: Observer<List<Subject?>?>) {
@@ -54,19 +38,21 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
 
         timer.schedule(object : TimerTask(){
             override fun run() {
-                Log.d(TAG, "5s latter")
-
                 GlobalScope.launch(Dispatchers.Main) {
                     getData(owner, observer = Observer {
+                        Log.d(TAG, "getData $it")
+
                         it?.let { it1 -> insertDB(it1) }
                     })
                 }
 
             }
-        }, period)
+        }, period, period)
     }
 
     private fun insertDB(subject: Subject) {
+        Log.d(TAG, "insertDB")
+
         subject.create_time =  sdf.format(Date())
         db?.subjectDao()?.insertSubject(subject)
     }
@@ -74,7 +60,6 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
     private fun querySubjectHistory(owner: LifecycleOwner, observer: Observer<List<Subject?>?>) {
         db?.subjectDao()?.getSubject()?.observe(owner, observer)
     }
-
 
     override fun onCleared() {
         super.onCleared()

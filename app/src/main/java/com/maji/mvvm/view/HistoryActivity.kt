@@ -29,15 +29,14 @@ class HistoryActivity : AppCompatActivity() {
 
     private fun observeData() {
         subjectViewModel = ViewModelProvider(this).get(SubjectViewModel::class.java)
-
-        subjectViewModel.observeDataHistory(this, observer = Observer {
-            Log.d(TAG, "history size is = ${it?.size}")
+        subjectViewModel.observeDataHistory(this, o = Observer {
             it?.let {
-                if(viewBinding.rvSubject.adapter == null) {
-                    SubjectAdapter.bindAdapter(viewBinding.rvSubject, it)
-                }
+                if(it.isEmpty()) return@let
+                Log.d(TAG, "history size is = ${it.size}")
 
-                viewBinding.rvSubject.adapter?.notifyItemInserted(0)
+                if(viewBinding.rvSubject.adapter == null) {
+                    SubjectAdapter.bindAdapter(viewBinding.rvSubject, it.toMutableList())
+                }
             }
 
         })
