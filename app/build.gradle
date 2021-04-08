@@ -8,7 +8,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "com.mqji.mvvm"
+        applicationId "com.maji.mvvm"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
