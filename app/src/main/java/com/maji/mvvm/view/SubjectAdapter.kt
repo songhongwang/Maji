@@ -1,36 +1,40 @@
 package com.maji.mvvm.view
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.maji.mvvm.R
+import com.maji.mvvm.databinding.ItemSubjectBinding
 import com.maji.mvvm.model.Subject
 
-class SubjectAdapter(private val dataList: List<Subject?>?) :RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class SubjectAdapter(var dataList: MutableList<Subject?>?) :RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+
+    companion object{
+        @BindingAdapter("bindData")
+        fun bindAdapter(recyclerView: RecyclerView, subjectList: MutableList<Subject?>?) : SubjectAdapter {
+            val adapter = SubjectAdapter(subjectList)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+            recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL))
+            return adapter
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_subject, parent, false)
-        return SubjectHolder(itemView)
+        return object : RecyclerView.ViewHolder(ItemSubjectBinding.inflate(LayoutInflater.from(parent.context), parent, false).root) {}
     }
 
     override fun getItemCount(): Int {
         return dataList?.size?:0
     }
 
-    override fun onBindViewHolder(holder2: RecyclerView.ViewHolder, position: Int) {
-        val holder = holder2 as SubjectHolder
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         var model = dataList?.get(position)
-
-        holder.tvUrlName.text = model?.authorizations_url
-        holder.tvCreatedTime.text = model?.create_time
+        val binding: ItemSubjectBinding? = DataBindingUtil.bind(holder.itemView)
+        binding?.subject = model
     }
 
-    class SubjectHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val tvUrlName: TextView = itemView.findViewById(R.id.tv_subject_url)
-        val tvCreatedTime: TextView = itemView.findViewById(R.id.tv_subject_created_time)
-
-    }
 }

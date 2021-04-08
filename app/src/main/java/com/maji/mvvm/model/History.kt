@@ -3,9 +3,10 @@ package com.maji.mvvm.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "history", foreignKeys = [ForeignKey(entity = Subject::class, parentColumns = ["id"], childColumns = ["hid"])])
+@Entity(tableName = "history", foreignKeys = [ForeignKey(entity = Subject::class, parentColumns = ["id"], childColumns = ["hid"], onDelete = CASCADE )])
 class History(
         @PrimaryKey(autoGenerate = true)
         val id: Int,
