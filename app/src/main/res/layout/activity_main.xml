@@ -7,10 +7,22 @@
     android:orientation="vertical"
     tools:context=".view.MainActivity">
 
+    <TextView
+        android:id="@+id/tv_top_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#BBBBBB"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:text="this page is auto refresh period 5s" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_subject"
+        app:layout_constraintTop_toBottomOf="@id/tv_top_tip"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/btn_history"
