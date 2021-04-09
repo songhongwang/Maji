@@ -12,7 +12,7 @@ interface SubjectDao {
     @Insert
     fun insertSubject(subject: Subject?)
 
-    @Query("select * from subject ORDER BY create_time DESC limit 100")
+    @Query("select * from subject ORDER BY id DESC limit 100")
     fun getSubject():LiveData<List<Subject?>?>?
 
 }
