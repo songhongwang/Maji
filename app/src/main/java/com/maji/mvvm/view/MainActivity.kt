@@ -60,13 +60,27 @@ class MainActivity : AppCompatActivity() {
     private fun observeData() {
         subjectViewModel = ViewModelProvider(this).get(SubjectViewModel::class.java)
         subjectViewModel.observeDataMain(this, observer = Observer {
-            if(it.isNullOrEmpty()) return@Observer
-            Log.d(TAG, "history size is = ${it.size}")
+            if(it.isNullOrEmpty()) {
+                Log.d(TAG, "main history size is null")
+                return@Observer
+            }
+            Log.d(TAG, "main history size is = ${it.size}")
             it.let {
-                if(viewBinding.rvSubject.adapter == null) {
+                var adapter = viewBinding.rvSubject.adapter as? SubjectAdapter
+                if(adapter == null) {
                     SubjectAdapter.bindAdapter(viewBinding.rvSubject, it.toMutableList())
+                } else {
+                    // 防止数据拉取失败 出现重复条目
+                    val latest = it[0]
+                    val readyLatest = adapter.dataList?.get(0)
+                    if(latest?.id == readyLatest?.id) {
+                        return@let
+                    }
+                    // 插入到列表头部
+                    viewBinding.rvSubject.scrollToPosition(0)
+                    adapter.dataList?.add(0, it[0])
+                    adapter.notifyItemInserted(0)
                 }
-                viewBinding.rvSubject.adapter?.notifyDataSetChanged()
             }
 
         })

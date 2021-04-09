@@ -2,8 +2,7 @@ package com.maji.mvvm.viewmodel
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.maji.mvvm.db.SubjectDataBase
 import com.maji.mvvm.model.Subject
@@ -18,8 +17,9 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
     private val TAG = SubjectViewModel::class.java.simpleName
     private val timer = Timer("schedule", true);
     private var db:SubjectDataBase? = null
-    private val period = 5 * 2 * 1000L
+    private val period = 5 * 1000L
     private var sdf :SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:MM:SS", Locale.CHINESE)
+    private var liveDataMain = MutableLiveData<List<Subject?>?>()
 
     init {
         db = SubjectDataBase.getInstance(context)
@@ -34,7 +34,8 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     fun observeDataMain(owner: LifecycleOwner, observer: Observer<List<Subject?>?>) {
-        querySubjectHistory(owner, observer)
+        liveDataMain.observe(owner, observer)
+        refreshData()
 
         timer.schedule(object : TimerTask(){
             override fun run() {
@@ -44,10 +45,21 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
 
                         it?.let { it1 -> insertDB(it1) }
                     })
-                }
 
+                    refreshData()
+                }
             }
-        }, period, period)
+        }, 0, period)
+    }
+
+    private fun refreshData() {
+        val syncData = db?.subjectDao()?.getSubjectSync()
+        if(syncData.isNullOrEmpty()) {
+            Log.d(TAG, "syncData is null")
+            return
+        }
+        Log.d(TAG, "syncData ${syncData[0]?.create_time}")
+        liveDataMain.postValue(syncData)
     }
 
     private fun insertDB(subject: Subject) {
