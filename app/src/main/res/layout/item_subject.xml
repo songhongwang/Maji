@@ -12,6 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         tools:context=".view.MainActivity">
 
         <ImageView
@@ -32,8 +34,48 @@
             android:ellipsize="end"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
+            android:layout_marginLeft="40dp"
+            tools:text="one record"
+            android:text="@{subject.authorizations_url}"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tv_current_user_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_subject_url"
+            android:lines="1"
+            android:ellipsize="end"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginLeft="40dp"
+            tools:text="one record"
+            android:text="@{subject.current_user_url}"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tv_auth_html_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_current_user_url"
+            android:lines="1"
+            android:ellipsize="end"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginLeft="40dp"
+            tools:text="one record"
+            android:text="@{subject.current_user_authorizations_html_url}"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tv_authorizations_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_auth_html_url"
+            android:lines="1"
+            android:ellipsize="end"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:layout_marginLeft="40dp"
             tools:text="one record"
             android:text="@{subject.authorizations_url}"
@@ -46,6 +88,7 @@
             android:layout_marginRight="15dp"
             tools:text="2021-04-07 10:10:10"
             android:text="@{subject.create_time}"
+            app:layout_constraintTop_toBottomOf="@id/tv_authorizations_url"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 

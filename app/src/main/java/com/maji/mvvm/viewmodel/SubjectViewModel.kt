@@ -18,7 +18,7 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
     private val timer = Timer("schedule", true);
     private var db:SubjectDataBase? = null
     private val period = 5 * 1000L
-    private var sdf :SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:MM:SS", Locale.CHINESE)
+    private var sdf :SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
     private var liveDataMain = MutableLiveData<List<Subject?>?>()
 
     init {
@@ -49,7 +49,7 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
                     refreshData()
                 }
             }
-        }, 0, period)
+        }, period, period)
     }
 
     private fun refreshData() {
@@ -63,9 +63,8 @@ class SubjectViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     private fun insertDB(subject: Subject) {
-        Log.d(TAG, "insertDB")
-
         subject.create_time =  sdf.format(Date())
+        Log.d(TAG, "insertDB create time ${subject.create_time}")
         db?.subjectDao()?.insertSubject(subject)
     }
 
