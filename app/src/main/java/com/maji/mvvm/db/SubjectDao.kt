@@ -15,4 +15,6 @@ interface SubjectDao {
     @Query("select * from subject ORDER BY id DESC limit 100")
     fun getSubject():LiveData<List<Subject?>?>?
 
+    @Query("select * from subject ORDER BY id DESC limit 100")
+    fun getSubjectSync():List<Subject?>?
 }
