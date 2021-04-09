@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
     private lateinit var subjectViewModel: SubjectViewModel
     private val mScrollThreshold = 20
+    private val maxLinesScrollLinkage = 5
 
     private lateinit var viewBinding: ActivityMainBinding
 
@@ -36,11 +37,12 @@ class MainActivity : AppCompatActivity() {
         viewBinding.rvSubject.addOnScrollListener(object :RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if(recyclerView.childCount< 10) {
+                if(recyclerView.childCount< maxLinesScrollLinkage) {
                     viewBinding.btnHistory.visibility = View.VISIBLE
                     return
                 }
-                var isSignificantDelta = abs(dy) > mScrollThreshold;
+                var isSignificantDelta = abs(dy) > mScrollThreshold
+                Log.d(TAG, "scroll $dy")
                 if (isSignificantDelta) {
                     if (dy > 0) {
                         viewBinding.btnHistory.visibility = View.GONE
